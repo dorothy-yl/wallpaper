@@ -1,7 +1,7 @@
 <template>
 	<view class="homeLayout">
 		<view class="banner">
-			<swiper indictor-dotes indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay>
+			<swiper indicator-dotes indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay>
 				<swiper-item>
 					<image src="../../common/images/banner1.jpg" mode="aspectFill"></image>
 				</swiper-item>
@@ -21,7 +21,7 @@
 			</view>
 			<view class="center">
 				<swiper vertical autoplay interval="1500" duration="300" circular>
-					<swiper-item v-for="item in 4">文字内容文字实行的是v成功的尝试大会v哈佛v哈佛和</swiper-item>
+					<swiper-item v-for="item in 4" :key="item">文字内容文字实行的是v成功的尝试大会v哈佛v哈佛和</swiper-item>
 				</swiper>
 			</view>
 			<view class="right">
@@ -43,8 +43,8 @@
 			</template>
 		</common-title>
 		<view class="content">
-			<scroll-view scroll-x>
-				<view class="box" v-for="item in 8">
+			<scroll-view scroll-x enable-flex>
+				<view class="box" v-for="item in 8" :key="item">
 					<image src="../../common/images/preview_small.webp" mode="aspectFill"></image>
 				</view>
 			</scroll-view>
@@ -55,11 +55,12 @@
 		<common-title>
 			<template #name>专题精选</template>
 			<template #custom>
-				<navigator url="" class="" more>More+</navigator>
+				<navigator url="/pages/classify/classify" class="more" >More+</navigator>
 			</template>
 		</common-title>
 		<view class="content">
-			<theme-item v-for="item in 8"></theme-item>
+			<theme-item v-for="item in 8" :key="item"></theme-item>
+			<theme-item :isMore="true"></theme-item>
 		</view>
 
 	</view>
