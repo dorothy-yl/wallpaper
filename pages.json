@@ -27,6 +27,13 @@
 				"navigationBarTitleText": "分类列表",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/preview/preview",
+			"style": {
+				"navigationBarTitleText": "预览",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {
