@@ -1,26 +1,24 @@
 {
   "id": "uni-icons",
   "displayName": "uni-icons 图标",
-  "version": "2.0.9",
-  "description": "图标组件，用于展示 icons 图标 。",
+  "version": "2.0.12",
+  "description": "图标组件，用于展示移动端常见的图标，可自定义颜色、大小。",
   "keywords": [
     "uni-ui",
     "uniui",
-    "图标",
-    "icon"
-  ],
+    "icon",
+    "图标"
+],
   "repository": "https://github.com/dcloudio/uni-ui",
   "engines": {
-    "HBuilderX": "^3.2.0"
+    "HBuilderX": "^3.2.14",
+    "uni-app": "^4.08",
+    "uni-app-x": "^4.61"
   },
   "directories": {
     "example": "../../temps/example_temps"
   },
   "dcloudext": {
-    "category": [
-      "前端组件",
-      "通用组件"
-    ],
     "sale": {
       "regular": {
         "price": "0.00"
@@ -37,48 +35,75 @@
       "data": "无",
       "permissions": "无"
     },
-    "npmurl": "https://www.npmjs.com/package/@dcloudio/uni-ui"
+    "npmurl": "https://www.npmjs.com/package/@dcloudio/uni-ui",
+    "type": "component-vue",
+    "darkmode": "x",
+    "i18n": "x",
+    "widescreen": "x"
   },
   "uni_modules": {
-    "dependencies": [],
+    "dependencies": [
+      "uni-scss"
+    ],
     "encrypt": [],
     "platforms": {
       "cloud": {
-        "tcb": "y",
-        "aliyun": "y"
+        "tcb": "x",
+        "aliyun": "x",
+        "alipay": "x"
       },
       "client": {
-        "App": {
-          "app-vue": "y",
-          "app-nvue": "y"
+        "uni-app": {
+          "vue": {
+            "vue2": "√",
+            "vue3": "√"
+          },
+          "web": {
+            "safari": "√",
+            "chrome": "√"
+          },
+          "app": {
+            "vue": "√",
+            "nvue": "-",
+            "android": {
+                "extVersion": "",
+                "minVersion": "29"
+            },
+            "ios": "√",
+            "harmony": "√"
+          },
+          "mp": {
+            "weixin": "√",
+            "alipay": "√",
+            "toutiao": "√",
+            "baidu": "√",
+            "kuaishou": "-",
+            "jd": "-",
+            "harmony": "-",
+            "qq": "√",
+            "lark": "-"
+          },
+          "quickapp": {
+            "huawei": "√",
+            "union": "√"
+          }
         },
-        "H5-mobile": {
-          "Safari": "y",
-          "Android Browser": "y",
-          "微信浏览器(Android)": "y",
-          "QQ浏览器(Android)": "y"
-        },
-        "H5-pc": {
-          "Chrome": "y",
-          "IE": "y",
-          "Edge": "y",
-          "Firefox": "y",
-          "Safari": "y"
-        },
-        "小程序": {
-          "微信": "y",
-          "阿里": "y",
-          "百度": "y",
-          "字节跳动": "y",
-          "QQ": "y",
-          "钉钉": "y",
-          "快手": "y",
-          "飞书": "y",
-          "京东": "y"
-        },
-        "快应用": {
-          "华为": "y",
-          "联盟": "y"
+        "uni-app-x": {
+          "web": {
+            "safari": "√",
+            "chrome": "√"
+          },
+          "app": {
+            "android": {
+                "extVersion": "",
+                "minVersion": "29"
+            },
+            "ios": "√",
+            "harmony": "√"
+          },
+          "mp": {
+            "weixin": "√"
+          }
         }
       }
     }

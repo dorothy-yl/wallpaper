@@ -145,9 +145,11 @@ const clickContact = ()=>{
 				.left{
 					display: flex;
 					align-items: center;
+					color:#28B389;
 					:deep(){
 						.uni-icons{
-							// color:$brand-theme-color !important;
+							color:#28B389 !important;
+							font-size: 40rpx;
 						}
 					}
 					.text{

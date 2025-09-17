@@ -1,5 +1,5 @@
 <template>
-	<view class="homeLayout">
+	<view class="homeLayout" pageBg>
 		<view class="banner">
 			<swiper indicator-dotes indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay>
 				<swiper-item>
@@ -114,7 +114,7 @@
 
 	.text {
 		font-size: 28rpx;
-		color: #28b389;
+		color:#28B389;
 		font-weight: 600;
 	}
 
