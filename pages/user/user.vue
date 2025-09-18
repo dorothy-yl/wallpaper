@@ -32,7 +32,7 @@
           </view>
         </navigator>
 
-        <view class="row">
+        <navigator class="row">
           <view class="left">
             <uni-icons type="chatboxes-filled" size="20"></uni-icons>
             <view class="text">联系客服</view>
@@ -47,13 +47,13 @@
           <!-- #ifndef MP -->
           <button @click="clickContact">拨打电话</button>
           <!-- #endif -->
-        </view>
+        </navigator>
       </view>
     </view>
 
     <view class="section">
       <view class="list">
-        <view class="row">
+        <navigator class="row">
           <view class="left">
             <uni-icons type="notification-filled" size="20"></uni-icons>
             <view class="text">订阅更新</view>
@@ -62,9 +62,9 @@
             <view class="text"></view>
             <uni-icons type="right" size="15" color="#aaa"></uni-icons>
           </view>
-        </view>
+        </navigator>
 
-        <view class="row">
+        <navigator class="row">
           <view class="left">
             <uni-icons type="flag-filled" size="20"></uni-icons>
             <view class="text">常见问题</view>
@@ -73,7 +73,7 @@
             <view class="text"></view>
             <uni-icons type="right" size="15" color="#aaa"></uni-icons>
           </view>
-        </view>
+        </navigator>
       </view>
     </view>
   </view>
@@ -129,14 +129,22 @@ const clickContact = () => {
 
     .list {
       .row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
         padding: 0 30rpx;
         height: 100rpx;
+        line-height: 100rpx;
         border-bottom: 1px solid #eee;
         position: relative;
         background: #fff;
+
+        :deep(a.navigator-wrap) {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+        }
 
         &:last-child {
           border-bottom: 0;

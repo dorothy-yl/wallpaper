@@ -1,25 +1,33 @@
 <template>
-  <view class="layout">
-    <view class="navbar">
-      <view class="statusBar" :style="{height :getStatusBarHeight() + 'px'}"></view>view>
-      <view class="titleBar" >
-        <view class="search">
-          <uni-icons class="icon" type="search" size="18" color="#888"></uni-icons>
-          <text class="text">搜索</text>
-        </view>
-      </view>
-    </view>
-
-    <view class="fill" >
-
+	<view class="layout">
+		<view class="navbar">
+			<view class="statusBar" :style="{height:getStatusBarHeight()+'px'}"></view>
+			<view class="titleBar" 
+			:style="{height:getTitleBarHeight()+'px',marginLeft:getLeftIconLeft()+'px'}">
+				<view class="title">{{title}}</view>
+				<navigator url="/pages/search/search" class="search">
+					 <uni-icons class="icon" type="search" color="#888" size="18"></uni-icons>
+					 <text class="text">搜索</text>
+				</navigator>
+			</view>
+		</view>
+		
+		<view class="fill" :style="{height:getNavBarHeight()+'px'}">
+			
+		</view>
 	</view>
-</view>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { getStatusBarHeight } from '@/utils/system.js';
-
+import {getStatusBarHeight,getTitleBarHeight,getNavBarHeight,getLeftIconLeft} from "@/utils/system.js"
+import { defineProps } from 'vue';
+const props = defineProps({
+	title: {
+		type: String,
+		default: ''
+	},
+})
 // let {top,height} = uni.getMenuButtonBoundingClientRect();
 // let titleBarHeight = ref(height+(top-getStatusBarHeight())*2);
 // console.log(titleBarHeight)
