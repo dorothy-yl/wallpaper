@@ -1,52 +1,197 @@
 <template>
 	<view class="preview">
 		<swiper circular>
-			<swiper-item v-for="item in 5">
+			<swiper-item v-for="item in 5" :key="item">
 				<image @click="maskChange" src="../../common/images/preview1.jpg" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
-
-        <view class="mask" v-if="maskState">
-            <view class="goBack"></view>
-            <view class="count">3/999</view>
-            <view class="time">
-                <uni-dateformat :date="new Date()" format="HH:mm"></uni-dateformat>
-            </view>
-            <view class="date">
-                <uni-dateformat :date="new Date()" format="MM月dd日"></uni-dateformat>
-
-            </view>
-            <view class="footer">
-                <view class="box">
-                    <uni-icons type="info" size="28" ></uni-icons>
-                    <view class="text">信息</view>
-                </view>
-                <view class="box">
-                    <uni-icons type="star" size="28" ></uni-icons>
-                    <view class="text">5分</view>
-                </view>
-
-                <view class="box">
-                    <uni-icons type="download" size="28" ></uni-icons>
-                    <view class="text">下载</view>
-                </view>
-               
-            </view>
-
-        </view>
-    </view>
+		
+		<view class="mask" v-if="maskState">
+			<view class="goBack"  @click="goBack"
+			:style="{top:getStatusBarHeight()+'px'}">
+				<uni-icons type="back" color="#fff" size="20"></uni-icons>
+			</view>
+			<view class="count">3 / 9</view>
+			<view class="time">
+				<uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
+			</view>
+			<view class="date">
+				<uni-dateformat :date="new Date()" format="MM月dd日"></uni-dateformat>
+			</view>
+			<view class="footer">
+				<view class="box" @click="clickInfo">
+					<uni-icons type="info" size="28"></uni-icons>
+					<view class="text">信息</view>
+				</view>
+				
+				<view class="box" @click="clickScore">
+					<uni-icons type="star" size="28"></uni-icons>
+					<view class="text">5分</view>
+				</view>
+				
+				<view class="box">
+					<uni-icons type="download" size="23"></uni-icons>
+					<view class="text">下载</view>
+				</view>
+			</view>
+		</view>
+		
+		<uni-popup ref="infoPopup" type="bottom">
+			<view class="infoPopup">
+				<view class="popHeader">
+					<view></view>
+					<view class="title">壁纸信息</view>
+					<view class="close" @click="clickInfoClose">
+						<uni-icons type="closeempty" size="18"													color="#999"></uni-icons>
+					</view>
+				</view>
+				<scroll-view scroll-y>
+					<view class="content">
+						<view class="row">
+							<view class="label">壁纸ID：</view>
+							<text selectable class="value">12312312adfa</text>
+						</view>
+						
+						<view class="row">
+							<view class="label">分类：</view>
+							<text class="value class">明星美女</text>
+						</view>
+						
+						<view class="row">
+							<view class="label">发布者：</view>
+							<text class="value">咸虾米</text>
+						</view>
+						
+						<view class="row">
+							<text class="label">评分：</text>
+							<view class='value roteBox'>
+								<view class="stars">
+									<uni-icons type="star-filled" size="16" color="#FFCA3E"></uni-icons>
+									<uni-icons type="star-filled" size="16" color="#FFCA3E"></uni-icons>
+									<uni-icons type="star-filled" size="16" color="#FFCA3E"></uni-icons>
+									<uni-icons type="star" size="16" color="#FFCA3E"></uni-icons>
+									<uni-icons type="star" size="16" color="#FFCA3E"></uni-icons>
+								</view>
+								<text class="score">3.5分</text>
+							</view>
+						</view>
+						
+						<view class="row">
+							<text class="label">摘要：</text>
+							<view class='value'>
+								摘要文字内容填充部分，摘要文字内容填充部分，摘要文字内容填充部分，摘要文字内容填充部分。
+							</view>
+						</view>
+						
+						<view class="row">
+							<text class="label">标签：</text>
+							<view class='value tabs'>
+								<view class="tab" v-for="item in 3" :key="item">标签名</view>
+							</view>
+						</view>	
+											
+						<view class="copyright">声明：本图片来用户投稿，非商业使用，用于免费学习交流，如侵犯了您的权益，您可以拷贝壁纸ID举报至平台，邮箱513894357@qq.com，管理将删除侵权壁纸，维护您的权益。
+						
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+		</uni-popup>
+		
+		
+		<uni-popup ref="scorePopup" :is-mask-click="false">
+			<view class="scorePopup">
+				<view class="popHeader">
+					<view></view>
+					<view class="title">壁纸评分</view>
+					<view class="close" @click="clickScoreClose">
+						<uni-icons type="closeempty" size="18"													color="#999"></uni-icons>
+					</view>
+				</view>
+				
+				<view class="content">
+					<view class="rating-container">
+						<view class="stars" @click="setRating(1)">
+							<uni-icons :type="userScore >= 1 ? 'star-filled' : 'star'" size="30" color="#FFCA3E"></uni-icons>
+						</view>
+						<view class="stars" @click="setRating(2)">
+							<uni-icons :type="userScore >= 2 ? 'star-filled' : 'star'" size="30" color="#FFCA3E"></uni-icons>
+						</view>
+						<view class="stars" @click="setRating(3)">
+							<uni-icons :type="userScore >= 3 ? 'star-filled' : 'star'" size="30" color="#FFCA3E"></uni-icons>
+						</view>
+						<view class="stars" @click="setRating(4)">
+							<uni-icons :type="userScore >= 4 ? 'star-filled' : 'star'" size="30" color="#FFCA3E"></uni-icons>
+						</view>
+						<view class="stars" @click="setRating(5)">
+							<uni-icons :type="userScore >= 5 ? 'star-filled' : 'star'" size="30" color="#FFCA3E"></uni-icons>
+						</view>
+					</view>
+					<text class="text">{{userScore}}分</text>
+				</view>
+				
+				<view class="footer">
+					<button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain >确认评分</button>
+				</view>
+			</view>
+		</uni-popup>
+		
+	</view>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
- 
- const maskState = ref(true);
- const maskChange = () => {
-    maskState.value = !maskState.value;
- }
+import {getStatusBarHeight} from "../../utils/system.js"
+const maskState =ref(true);
+const infoPopup = ref(null);
+const scorePopup = ref(null);
+const userScore =ref(0)
+
+
+
+
+//点击info弹窗
+const clickInfo = ()=>{
+	infoPopup.value.open();
+}
+
+//点击关闭信息弹窗
+const clickInfoClose = ()=>{
+	infoPopup.value.close();
+}
+
+//评分弹窗
+const clickScore=()=>{
+	scorePopup.value.open();
+}
+//关闭评分框
+const clickScoreClose=()=>{
+	scorePopup.value.close();
+}
+
+//设置评分
+const setRating = (rating) => {
+	userScore.value = rating;
+}
+
+//确认评分
+const submitScore=()=>{
+	console.log("评分了:", userScore.value);
+	scorePopup.value.close();
+}
+
+
+//遮罩层状态
+const maskChange = ()=>{
+	maskState.value = !maskState.value
+}
+
+
+//返回上一页
+const goBack= ()=>{
+	uni.navigateBack()
+}
 </script>
-
-
 
 <style lang="scss" scoped>
 .preview{
@@ -171,6 +316,11 @@ import { ref } from 'vue';
 					.roteBox{
 						display: flex;
 						align-items: center;
+						.stars{
+							display: flex;
+							align-items: center;
+							gap: 2rpx;
+						}
 						.score{
 							font-size: 26rpx;
 							color:$text-font-color-2;
@@ -219,14 +369,24 @@ import { ref } from 'vue';
 		.content{
 			padding:30rpx 0;
 			display: flex;
+			flex-direction: column;
 			justify-content: center;
 			align-items: center;
+			.rating-container{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 10rpx;
+				margin-bottom: 20rpx;
+				.stars{
+					padding: 10rpx;
+				}
+			}
 			.text{
 				color: #FFCA3E;
-				padding-left: 10rpx;
-				width: 80rpx;
+				font-size: 32rpx;
 				line-height: 1em;
-				text-align: right;
+				text-align: center;
 			}
 		}
 		.footer{
