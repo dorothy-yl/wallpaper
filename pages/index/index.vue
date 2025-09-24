@@ -1,6 +1,6 @@
 <template>
   <view class="homeLayout pageBg">
-    <custom-nav-bar title="推荐" ></custom-nav-bar>
+    <custom-nav-bar title="推荐"></custom-nav-bar>
     <view class="banner">
       <swiper
         indicator-dotes
@@ -8,23 +8,8 @@
         indicator-active-color="#fff"
         autoplay
       >
-        <swiper-item>
-          <image
-            src="../../common/images/banner1.jpg"
-            mode="aspectFill"
-          ></image>
-        </swiper-item>
-        <swiper-item>
-          <image
-            src="../../common/images/banner2.jpg"
-            mode="aspectFill"
-          ></image>
-        </swiper-item>
-        <swiper-item>
-          <image
-            src="../../common/images/banner3.jpg"
-            mode="aspectFill"
-          ></image>
+        <swiper-item v-for="item in bannerList" :key="item._id">
+          <image :src="item.picurl" mode="aspectFill"></image>
         </swiper-item>
       </swiper>
     </view>
@@ -36,8 +21,8 @@
       </view>
       <view class="center">
         <swiper vertical autoplay interval="1500" duration="300" circular>
-          <swiper-item v-for="item in 4" :key="item"
-            >文字内容文字实行的是v成功的尝试大会v哈佛v哈佛和</swiper-item
+          <swiper-item v-for="item in noticeList" :key="item._id"
+            >文{{item.title}}</swiper-item
           >
         </swiper>
       </view>
@@ -60,12 +45,14 @@
       </template>
     </common-title>
     <view class="content">
-      <scroll-view scroll-x enable-flex>
-        <view class="box" v-for="item in 8" :key="item">
-          <image
-            src="../../common/images/preview_small.webp"
-            mode="aspectFill"
-          ></image>
+      <scroll-view scroll-x>
+        <view
+          class="box"
+          v-for="item in randomList"
+          :key="item._id"
+          @click="goPreview(item._id)"
+        >
+          <image :src="item.smallPicurl" mode="aspectFill"></image>
         </view>
       </scroll-view>
     </view>
@@ -86,7 +73,55 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import customNavBar from "@/components/custom-nav-bar.vue";
+
+const bannerList = ref([]);
+const randomList = ref([]);
+const noticeList = ref([]);
+
+const getBanner = async () => {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/homeBanner",
+    header: {
+      "access-key": "282011",
+    },
+  });
+  if (res.data.errCode === 0) {
+    bannerList.value = res.data.data;
+  }
+};
+
+const getDayRandom = async () => {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/randomWall",
+    header: {
+      "access-key": "282011",
+    },
+  });
+  if (res.data.errCode === 0) {
+    randomList.value = res.data.data;
+  }
+};
+
+const getNotice = async () => {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/wallNewsList",
+    header: {
+      "access-key": "282011",
+    },
+    data: {
+      select:true
+    },
+  });
+  if (res.data.errCode === 0) {
+    noticeList.value = res.data.data;
+  }
+};
+
+getBanner();
+getDayRandom();
+getNotice();
 </script>
 
 <style lang="scss" scoped>
