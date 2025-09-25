@@ -11,20 +11,27 @@
 
 <script setup>
 import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
 import { apiGetClassList } from "@/api/api.js";
 const classList = ref([]);
+const queryParams = {}
+onLoad((e) => {
+	let {id=null,name=null} = e;
+	queryParams.classid = id;
+	queryParams.name = name;
+	uni.setNavigationBarTitle({
+		title: name
+	});
+	getClassList();
 
-
+});
 
 const getClassList = async () => {
-  let res = await apiGetClassList({
-    classid: "6524a48f6523417a8a8b825d",
-  });
+  let res = await apiGetClassList(queryParams)
   classList.value = res.data;
   console.log(res);
 };
 
-getClassList();
 </script>
 
 <style lang="scss" scoped>
