@@ -66,7 +66,7 @@
       </template>
     </common-title>
     <view class="content">
-      <theme-item v-for="item in 8" :key="item"></theme-item>
+      <theme-item v-for="item in classifyList" :key="item._id" :item="item"></theme-item>
       <theme-item :isMore="true"></theme-item>
     </view>
   </view>
@@ -74,12 +74,13 @@
 
 <script setup>
 import { ref } from "vue";
-import { apiGetBanner, apiGetDayRandom, apiGetNotice} from "@/api/api.js";
+import { apiGetBanner, apiGetDayRandom, apiGetNotice,apiGetClassify} from "@/api/api.js";
 import customNavBar from "@/components/custom-nav-bar.vue";
 
 const bannerList = ref([]);
 const randomList = ref([]);
 const noticeList = ref([]);
+const classifyList = ref([]);
 
 const getBanner = async () => {
   let res = await apiGetBanner();
@@ -98,12 +99,20 @@ const getNotice = async () => {
   
 }
 
+const getClassify = async () => {
+  let res = await apiGetClassify({
+    select:true
+  })
+  classifyList.value = res.data;
+  
+}
 
 
 
 getBanner();
 getDayRandom();
 getNotice();
+getClassify();
 </script>
 
 <style lang="scss" scoped>
