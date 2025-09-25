@@ -1,9 +1,10 @@
 <template>
     <view class="themeItem">
-        <navigator url="/pages/classlist/classlist" class="box" v-if="!isMore">
+        <navigator :url="`/pages/classlist/classlist?id=`+item._id" 
+        class="box" v-if="!isMore">
             <image class="pic" :src="item.picurl" mode="aspectFill"></image>
             <view class="mask">{{item.name}}</view>
-            <view class="tab">3天前更新</view>
+            <view class="tab">{{compareTimestamp(item.updateTime)}}前更新</view>
         </navigator>
 
         <navigator url="/pages/classify/classify" open-type="switchTab" class="box more" v-if="isMore">
@@ -17,6 +18,7 @@
 </template>
 
 <script setup>
+import {compareTimestamp} from "@/utils/common"
 defineProps({
     isMore: {
         type: Boolean,
