@@ -34,7 +34,7 @@
 
         <view class="box" @click="clickScore">
           <uni-icons type="star" size="28"></uni-icons>
-          <view class="text">5分</view>
+          <view class="text">{{ currentInfo.score }}分</view>
         </view>
 
         <view class="box">
@@ -73,8 +73,13 @@
             <view class="row">
               <text class="label">评分：</text>
               <view class="value roteBox">
-                <uni-rate readonly touchable :value="currentInfo.score" size="16"></uni-rate>
-          
+                <uni-rate
+                  readonly
+                  touchable
+                  :value="currentInfo.score"
+                  size="16"
+                ></uni-rate>
+
                 <text class="score">{{ currentInfo.score }}分</text>
               </view>
             </view>
@@ -89,7 +94,9 @@
             <view class="row">
               <text class="label">标签：</text>
               <view class="value tabs">
-                <view class="tab" v-for="tab in currentInfo.tabs">{{ tab }}</view>
+                <view class="tab" v-for="tab in currentInfo.tabs">{{
+                  tab
+                }}</view>
               </view>
             </view>
 
@@ -105,57 +112,21 @@
       <view class="scorePopup">
         <view class="popHeader">
           <view></view>
-          <view class="title">壁纸评分</view>
+          <view class="title">{{ isScore ? "评分过了~" : "壁纸评分" }}</view>
           <view class="close" @click="clickScoreClose">
             <uni-icons type="closeempty" size="18" color="#999"></uni-icons>
           </view>
         </view>
 
         <view class="content">
-          <view class="rating-container">
-            <view class="stars" @click="setRating(1)">
-              <uni-icons
-                :type="userScore >= 1 ? 'star-filled' : 'star'"
-                size="30"
-                color="#FFCA3E"
-              ></uni-icons>
-            </view>
-            <view class="stars" @click="setRating(2)">
-              <uni-icons
-                :type="userScore >= 2 ? 'star-filled' : 'star'"
-                size="30"
-                color="#FFCA3E"
-              ></uni-icons>
-            </view>
-            <view class="stars" @click="setRating(3)">
-              <uni-icons
-                :type="userScore >= 3 ? 'star-filled' : 'star'"
-                size="30"
-                color="#FFCA3E"
-              ></uni-icons>
-            </view>
-            <view class="stars" @click="setRating(4)">
-              <uni-icons
-                :type="userScore >= 4 ? 'star-filled' : 'star'"
-                size="30"
-                color="#FFCA3E"
-              ></uni-icons>
-            </view>
-            <view class="stars" @click="setRating(5)">
-              <uni-icons
-                :type="userScore >= 5 ? 'star-filled' : 'star'"
-                size="30"
-                color="#FFCA3E"
-              ></uni-icons>
-            </view>
-          </view>
+          <uni-rate v-model="userScore" allowHalf :disabled="isScore" />
           <text class="text">{{ userScore }}分</text>
         </view>
 
         <view class="footer">
           <button
             @click="submitScore"
-            :disabled="!userScore"
+            :disabled="!userScore || isScore"
             type="default"
             size="mini"
             plain
@@ -172,6 +143,7 @@
 import { ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import { getStatusBarHeight } from "../../utils/system.js";
+import { apiGetSetupScore } from "../../api/api.js";
 const maskState = ref(true);
 const infoPopup = ref(null);
 const scorePopup = ref(null);
@@ -180,6 +152,7 @@ const classList = ref([]);
 const currentId = ref(null);
 const currentIndex = ref(0);
 const currentInfo = ref(null);
+const isScore = ref(false);
 const readImgs = ref([]);
 
 const storeClassList = uni.getStorageSync("storeClassList") || [];
@@ -199,8 +172,6 @@ onLoad((e) => {
 
   readImagsFun();
 });
-
-
 
 const swiperChange = (e) => {
   currentIndex.value = e.detail.current;
@@ -223,11 +194,17 @@ const clickInfoClose = () => {
 
 //评分弹窗
 const clickScore = () => {
+  if (currentInfo.value.userScore) {
+    isScore.value = true;
+    userScore.value = currentInfo.value.userScore;
+  }
   scorePopup.value.open();
 };
 //关闭评分框
 const clickScoreClose = () => {
   scorePopup.value.close();
+  userScore.value = 0;
+  isScore.value = false;
 };
 
 //设置评分
@@ -236,9 +213,26 @@ const setRating = (rating) => {
 };
 
 //确认评分
-const submitScore = () => {
-  console.log("评分了:", userScore.value);
-  scorePopup.value.close();
+const submitScore = async () => {
+  uni.showLoading({
+    title: "加载中... ",
+  });
+  let { classid, _id: wallId } = currentInfo.value;
+  let res = await apiGetSetupScore({
+    classid,
+    wallId,
+    userScore: userScore.value,
+  });
+  uni.hideLoading();
+  if (res.errCode === 0) {
+    uni.showToast({
+      title: "评分成功",
+      icon: "none",
+    });
+    classList.value[currentIndex.value].userScore = userScore.value;
+    uni.setStorageSync("storeClassList", classList.value);
+    clickScoreClose();
+  }
 };
 
 //遮罩层状态
@@ -250,8 +244,6 @@ const maskChange = () => {
 const goBack = () => {
   uni.navigateBack();
 };
-
-
 
 function readImagsFun() {
   readImgs.value.push(
