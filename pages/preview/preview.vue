@@ -57,56 +57,39 @@
           <view class="content">
             <view class="row">
               <view class="label">壁纸ID：</view>
-              <text selectable class="value">12312312adfa</text>
+              <text selectable class="value">{{ currentInfo._id }}</text>
             </view>
 
-            <view class="row">
+            <!-- <view class="row">
               <view class="label">分类：</view>
               <text class="value class">明星美女</text>
-            </view>
+            </view> -->
 
             <view class="row">
               <view class="label">发布者：</view>
-              <text class="value">咸虾米</text>
+              <text class="value">{{ currentInfo.nickname }}</text>
             </view>
 
             <view class="row">
               <text class="label">评分：</text>
               <view class="value roteBox">
-                <view class="stars">
-                  <uni-icons
-                    type="star-filled"
-                    size="16"
-                    color="#FFCA3E"
-                  ></uni-icons>
-                  <uni-icons
-                    type="star-filled"
-                    size="16"
-                    color="#FFCA3E"
-                  ></uni-icons>
-                  <uni-icons
-                    type="star-filled"
-                    size="16"
-                    color="#FFCA3E"
-                  ></uni-icons>
-                  <uni-icons type="star" size="16" color="#FFCA3E"></uni-icons>
-                  <uni-icons type="star" size="16" color="#FFCA3E"></uni-icons>
-                </view>
-                <text class="score">3.5分</text>
+                <uni-rate readonly touchable :value="currentInfo.score" size="16"></uni-rate>
+          
+                <text class="score">{{ currentInfo.score }}分</text>
               </view>
             </view>
 
             <view class="row">
               <text class="label">摘要：</text>
               <view class="value">
-                摘要文字内容填充部分，摘要文字内容填充部分，摘要文字内容填充部分，摘要文字内容填充部分。
+                {{ currentInfo.description }}
               </view>
             </view>
 
             <view class="row">
               <text class="label">标签：</text>
               <view class="value tabs">
-                <view class="tab" v-for="item in 3" :key="item">标签名</view>
+                <view class="tab" v-for="tab in currentInfo.tabs">{{ tab }}</view>
               </view>
             </view>
 
@@ -196,6 +179,7 @@ const userScore = ref(0);
 const classList = ref([]);
 const currentId = ref(null);
 const currentIndex = ref(0);
+const currentInfo = ref(null);
 const readImgs = ref([]);
 
 const storeClassList = uni.getStorageSync("storeClassList") || [];
@@ -211,24 +195,16 @@ onLoad((e) => {
   currentIndex.value = classList.value.findIndex(
     (item) => item._id == currentId.value
   );
+  currentInfo.value = classList.value[currentIndex.value];
+
   readImagsFun();
 });
 
-function readImagsFun() {
-  readImgs.value.push(
-    currentIndex.value <= 0
-      ? classList.value.length - 1
-      : currentIndex.value - 1,
-    currentIndex.value,
-    currentIndex.value >= classList.value.length - 1
-      ? 0
-      : currentIndex.value + 1
-  );
-  readImgs.value = [...new Set(readImgs.value)];
-}
+
 
 const swiperChange = (e) => {
   currentIndex.value = e.detail.current;
+  currentInfo.value = classList.value[currentIndex.value];
   readImagsFun();
   console.log(e);
 };
@@ -274,6 +250,21 @@ const maskChange = () => {
 const goBack = () => {
   uni.navigateBack();
 };
+
+
+
+function readImagsFun() {
+  readImgs.value.push(
+    currentIndex.value <= 0
+      ? classList.value.length - 1
+      : currentIndex.value - 1,
+    currentIndex.value,
+    currentIndex.value >= classList.value.length - 1
+      ? 0
+      : currentIndex.value + 1
+  );
+  readImgs.value = [...new Set(readImgs.value)];
+}
 </script>
 
 <style lang="scss" scoped>
