@@ -1,8 +1,13 @@
 <template>
   <view class="preview">
     <swiper circular :current="currentIndex" @change="swiperChange">
-      <swiper-item v-for="item in classList" :key="item._id">
-        <image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
+      <swiper-item v-for="(item, index) in classList" :key="item._id">
+        <image
+          v-if="readImgs.includes(index)"
+          @click="maskChange"
+          :src="item.picurl"
+          mode="aspectFill"
+        ></image>
       </swiper-item>
     </swiper>
 
@@ -191,6 +196,7 @@ const userScore = ref(0);
 const classList = ref([]);
 const currentId = ref(null);
 const currentIndex = ref(0);
+const readImgs = ref([]);
 
 const storeClassList = uni.getStorageSync("storeClassList") || [];
 classList.value = storeClassList.map((item) => {
@@ -202,14 +208,30 @@ classList.value = storeClassList.map((item) => {
 
 onLoad((e) => {
   currentId.value = e.id;
-  currentIndex.value = classList.value.findIndex(item => item._id == currentId.value)
+  currentIndex.value = classList.value.findIndex(
+    (item) => item._id == currentId.value
+  );
+  readImagsFun();
 });
+
+function readImagsFun() {
+  readImgs.value.push(
+    currentIndex.value <= 0
+      ? classList.value.length - 1
+      : currentIndex.value - 1,
+    currentIndex.value,
+    currentIndex.value >= classList.value.length - 1
+      ? 0
+      : currentIndex.value + 1
+  );
+  readImgs.value = [...new Set(readImgs.value)];
+}
 
 const swiperChange = (e) => {
   currentIndex.value = e.detail.current;
-  console.log(currentIndex.value);
+  readImagsFun();
+  console.log(e);
 };
-
 
 console.log(currentIndex.value);
 
