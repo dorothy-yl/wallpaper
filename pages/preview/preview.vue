@@ -202,8 +202,7 @@ classList.value = storeClassList.map((item) => {
 
 onLoad((e) => {
   currentId.value = e.id;
-  currentIndex.value = classList.value.findIndex(
-    item => item._id = currentId.value)
+  currentIndex.value = classList.value.findIndex(item => item._id == currentId.value)
 });
 
 const swiperChange = (e) => {
