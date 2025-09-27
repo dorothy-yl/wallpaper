@@ -5,7 +5,7 @@
     </view>
     <view class="content">
       <navigator
-        :url="'/pages/preview/preview?id='+item._id"
+        :url="'/pages/preview/preview?id=' + item._id"
         class="item"
         v-for="item in classList"
         :key="item._id"
@@ -24,22 +24,26 @@
 
 <script setup>
 import { ref } from "vue";
-import { onLoad, onReachBottom } from "@dcloudio/uni-app";
-import { apiGetClassList } from "@/api/api.js";
+import {onLoad,onReachBottom} from "@dcloudio/uni-app"
+import { apiGetClassList, apiGetHistoryList } from "@/api/api.js";
 const classList = ref([]);
 const noData = ref(false);
 const queryParams = {
   pageNum: 1,
   pageSize: 12,
 };
+let pageName;
 
 onLoad((e) => {
-  let { id = null, name = null } = e;
-  queryParams.classid = id;
-  queryParams.name = name;
+  let { id = null, name = null, type = null } = e;
+  if (type) queryParams.type = type;
+  if (id) queryParams.classid = id;
+  pageName = name;
+  // 修改导航标题
   uni.setNavigationBarTitle({
     title: name,
   });
+  // 执行获取列表方法
   getClassList();
 });
 onReachBottom(() => {
@@ -47,14 +51,17 @@ onReachBottom(() => {
   queryParams.pageNum++;
   getClassList();
 });
+
+
 const getClassList = async () => {
-  let res = await apiGetClassList(queryParams);
+  let res;
+	if(queryParams.classid) res = await apiGetClassList(queryParams);
+	if(queryParams.type) res = await apiGetHistoryList(queryParams);
+
   classList.value = [...classList.value, ...res.data];
-  if (res.data.length < queryParams.pageSize) noData.value = true;
+  if (queryParams.pageSize > res.data.length) noData.value = true;
   uni.setStorageSync("storeClassList", classList.value);
-  console.log( classList.value);
-
-
+  console.log(classList.value);
 };
 </script>
 

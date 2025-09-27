@@ -325,25 +325,6 @@ const clickDownload = async () => {
   // #endif
 };
 
-
-//分享给好友
-onShareAppMessage((e)=>{
-	return {
-		title:"咸虾米壁纸",
-		path:"/pages/preview/preview?id="+currentId.value+"&type=share"
-	}
-})
-
-
-//分享朋友圈
-onShareTimeline(()=>{
-	return {
-		title:"咸虾米壁纸",
-		query:"id="+currentId.value+"&type=share"
-	}
-})
-
-
 function readImagsFun() {
   readImgs.value.push(
     currentIndex.value <= 0
